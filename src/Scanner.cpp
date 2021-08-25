@@ -3,9 +3,9 @@
 //
 
 #include "Scanner.h"
+#include "Runner.h"
 
 #include <utility>
-#include "util/ErrorHandling.h"
 
 std::vector<Token> Scanner::scanTokens() {
 
@@ -90,8 +90,8 @@ void Scanner::scanToken() {
                 identifier();
             } else if (c == ' ') { // do nothing
             } else {
-                hadError = true;
-                ErrorHandling::error(line, "Unexpected character.");
+//                hadError = true;
+                Runner::error(line, "Unexpected character.");
                 break;
             }
     }
@@ -129,7 +129,7 @@ void Scanner::string() {
     }
 
     if (isAtEnd()) {
-        ErrorHandling::error(line, "Unterminated string.");
+        Runner::error(line, "Unterminated string.");
         return;
     }
 

@@ -17,7 +17,6 @@ public:
     std::vector<Token> scanTokens();
 
 private:
-    bool hadError = false;
     int start = 0;
     int current = 0;
     int line = 1;

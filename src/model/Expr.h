@@ -8,8 +8,6 @@
 
 #include "Token.h"
 
-//namespace Expr {
-
 class Binary;
 
 class Unary;
@@ -18,7 +16,7 @@ class Grouping;
 
 class Literal;
 
-typedef std::variant<Binary, Unary, Grouping, Literal> expr_t;
+typedef std::variant<Binary, Unary, Grouping, Literal, bool> expr_t;
 
 template<typename R>
 class IVisitor {
@@ -36,7 +34,7 @@ public:
 
 class Literal {
 public:
-    explicit Literal(literal_t& value) : value(value) {}
+    explicit Literal(literal_t value) : value(value) {}
 
     template<typename R>
     R accept(IVisitor<R> &visitor) {
@@ -91,9 +89,5 @@ public:
     Token &op;
     expr_t &expression;
 };
-
-
-
-//}
 
 #endif //CPPLOX_EXPR_H

@@ -9,8 +9,6 @@ add_executable(cpplox
         src/Scanner.h
         src/model/Token.cpp
         src/model/Token.h
-        src/util/ErrorHandling.cpp
-        src/util/ErrorHandling.h
         src/util/magic_enum.hpp
         src/Parser.cpp
         src/Parser.h
@@ -19,6 +17,10 @@ add_executable(cpplox
         src/visitors/PrettyPrintVisitor.cpp
         src/visitors/PrettyPrintVisitor.h
         src/model/Expr.h
+        src/Parser.cpp
+        src/Parser.h
+        src/Runner.cpp
+        src/Runner.h
         )
 
 add_executable(cpplox_tests
@@ -26,17 +28,20 @@ add_executable(cpplox_tests
         test/catch.hpp
         test/ScannerTest.cpp
         test/ExprTest.cpp
+        test/ParserTest.cpp
 
         src/Scanner.cpp
         src/Scanner.h
         src/model/Token.cpp
         src/model/Token.h
-        src/util/ErrorHandling.cpp
-        src/util/ErrorHandling.h
         src/util/magic_enum.hpp
         src/Parser.cpp
         src/Parser.h
         src/visitors/PrettyPrintVisitor.cpp
         src/visitors/PrettyPrintVisitor.h
         src/model/Expr.h
+        src/Parser.cpp
+        src/Parser.h
+        src/Runner.cpp
+        src/Runner.h
         )
