@@ -42,10 +42,10 @@ std::string PrettyPrintVisitor::visitLiteralExpr(Literal expr) {
 }
 
 std::string PrettyPrintVisitor::visitExpr(expr_t expr) {
-    if (holds_alternative<Binary>(expr)) return visitBinaryExpr(get<Binary>(expr));
-    else if (holds_alternative<Unary>(expr)) return visitUnaryExpr(get<Unary>(expr));
-    else if (holds_alternative<Grouping>(expr)) return visitGroupingExpr(get<Grouping>(expr));
-    else if (holds_alternative<Literal>(expr)) return visitLiteralExpr(get<Literal>(expr));
+    if (expr.type() == typeid(Binary)) return visitBinaryExpr(any_cast<Binary>(expr));
+    else if (expr.type() == typeid(Unary)) return visitUnaryExpr(any_cast<Unary>(expr));
+//    else if (expr.type() == typeid(Grouping)) return visitGroupingExpr(any_cast<Grouping>(expr));
+    else if (expr.type() == typeid(Literal)) return visitLiteralExpr(any_cast<Literal>(expr));
     throw std::invalid_argument(
             "Expr needs to be one of the following types, but isn't: Binary, Unary, Grouping, Literal");
 }

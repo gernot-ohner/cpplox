@@ -15,29 +15,28 @@ expr_t Parser::expression() {
 expr_t Parser::equality() {
 
     expr_t expr = comparison();
-    std::vector<expr_t> exprs {};
-    exprs.push_back(expr);
     while (match(std::vector<TokenType>{
             TokenType::BANG_EQUAL, TokenType::EQUAL_EQUAL})) {
         Token op = previous();
         expr_t right = comparison();
-        exprs.emplace_back(Binary(expr, op, right));
-    }
+        // I think the problem is that binary is constructed with a reference to right
+        // which goes out of scope here and is deleted
 
-    return exprs.back();
+        // DING, DING, DING, we have a winner!
+        expr = Binary(expr, op, right);
+    }
+    return expr;
 }
 
 
 expr_t Parser::comparison() {
     expr_t expr = term();
 
-    std::vector<expr_t> exprs {};
-    exprs.push_back(expr);
     while (match(std::vector<TokenType>{
             TokenType::GREATER, TokenType::GREATER_EQUAL, TokenType::LESS, TokenType::LESS_EQUAL})) {
         Token op = previous();
         expr_t right = term();
-        exprs.emplace_back(Binary(expr, op, right));
+        expr = Binary(expr, op, right);
     }
 
     return expr;
@@ -45,26 +44,22 @@ expr_t Parser::comparison() {
 
 expr_t Parser::term() {
     expr_t expr = factor();
-    std::vector<expr_t> exprs {};
-    exprs.push_back(expr);
     while (match(std::vector<TokenType>{
         TokenType::PLUS, TokenType::MINUS})) {
         Token op = previous();
         expr_t right = factor();
-        exprs.emplace_back(Binary(expr, op, right));
+        expr = Binary(expr, op, right);
     }
     return expr;
 }
 
 expr_t Parser::factor() {
     expr_t expr = unary();
-    std::vector<expr_t> exprs {};
-    exprs.push_back(expr);
     while (match(std::vector<TokenType>{
         TokenType::STAR, TokenType::SLASH})) {
         Token op = previous();
         expr_t right = unary();
-        exprs.emplace_back(Binary(expr, op, right));
+        expr = Binary(expr, op, right);
     }
     return expr;
 }
@@ -78,8 +73,8 @@ expr_t Parser::unary() {
     return primary();
 }
 
-//primary        → NUMBER | STRING | "true" | "false" | "nil"
-//| "(" expression ")" ;
+// primary        → NUMBER | STRING | "true" | "false" | "nil"
+//                  | "(" expression ")" ;
 expr_t Parser::primary() {
     if (match(TokenType::TRUE)) return true;
     else if (match(TokenType::FALSE)) return false;
@@ -90,7 +85,8 @@ expr_t Parser::primary() {
         expr_t expr = expression();
         consume(TokenType::RIGHT_PAREN, "Expect ')' after expression.");
 
-        return Grouping(expr);
+        return expr;
+//        return Grouping(expr);
     }
 
     // TODO this is hacky

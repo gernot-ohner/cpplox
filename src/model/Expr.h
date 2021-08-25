@@ -7,30 +7,13 @@
 
 
 #include "Token.h"
+#include <memory>
+#include <any>
 
-class Binary;
-
-class Unary;
-
-class Grouping;
-
-class Literal;
-
-typedef std::variant<Binary, Unary, Grouping, Literal, bool> expr_t;
+typedef std::any expr_t;
 
 template<typename R>
-class IVisitor {
-public:
-    virtual R visitExpr(expr_t expr) = 0;
-
-    virtual R visitBinaryExpr(Binary expr) = 0;
-
-    virtual R visitUnaryExpr(Unary expr) = 0;
-
-    virtual R visitGroupingExpr(Grouping expr) = 0;
-
-    virtual R visitLiteralExpr(Literal expr) = 0;
-};
+class IVisitor;
 
 class Literal {
 public:
@@ -48,7 +31,7 @@ public:
 
 class Grouping {
 public:
-    explicit Grouping(expr_t &expression) : expression(expression) {}
+    Grouping(expr_t expression) : expression(expression) {}
 
     template<typename R>
     R accept(IVisitor<R> &visitor) {
@@ -56,13 +39,13 @@ public:
     }
 
 public:
-    expr_t &expression;
+    expr_t expression{};
 };
 
 class Binary {
 public:
     // TODO this probably isn't right. I should pass a pointer to the expr? Or a reference?
-    Binary(expr_t &left, Token &op, expr_t &right) : left(left), op(op), right(right) {}
+    Binary(expr_t left, Token op, expr_t right) : left(left), op(op), right(right) {}
 
     template<class R>
     R accept(IVisitor<R> &visitor) {
@@ -70,15 +53,15 @@ public:
     }
 
 public:
-    expr_t &left;
-    Token &op;
-    expr_t &right;
+    expr_t left;
+    Token op;
+    expr_t right;
 };
 
 
 class Unary {
 public:
-    Unary(Token &op, expr_t &expression) : op(op), expression(expression) {}
+    Unary(Token op, expr_t expression) : op(op), expression(expression) {}
 
     template<typename R>
     R accept(IVisitor<R> &visitor) {
@@ -86,8 +69,24 @@ public:
     }
 
 public:
-    Token &op;
-    expr_t &expression;
+    Token op;
+    expr_t expression;
+};
+
+
+template<typename R>
+class IVisitor {
+public:
+    virtual R visitExpr(expr_t expr) = 0;
+
+    virtual R visitBinaryExpr(Binary expr) = 0;
+
+    virtual R visitUnaryExpr(Unary expr) = 0;
+
+    virtual R visitGroupingExpr(Grouping expr) = 0;
+
+    virtual R visitLiteralExpr(Literal expr) = 0;
 };
 
 #endif //CPPLOX_EXPR_H
+
