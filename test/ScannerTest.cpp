@@ -6,7 +6,7 @@
 #include "../src/Scanner.h"
 #include "catch.hpp"
 
-TEST_CASE("Scanner can scan single character tokens") {
+TEST_CASE("Scanner: can scan single character tokens") {
     // given
     Scanner s{",.()[]*+-;/"};
     std::vector<Token> expected{
@@ -31,7 +31,7 @@ TEST_CASE("Scanner can scan single character tokens") {
     REQUIRE(actual == expected);
 }
 
-TEST_CASE("Scanner can scan assignment") {
+TEST_CASE("Scanner: can scan assignment") {
     // given
     Scanner s{"var language = \"lox\""};
     std::vector<Token> expected{

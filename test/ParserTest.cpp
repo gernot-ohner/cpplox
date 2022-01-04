@@ -8,9 +8,36 @@
 #include "../src/model/Expr.h"
 #include "../src/Parser.h"
 #include "../src/visitors/PrettyPrintVisitor.h"
+#include "../src/visitors/EvaluationVisitor.h"
 
 
-TEST_CASE("minimal equality example") {
+TEST_CASE("Parser: minimal addition example") {
+    // given
+    std::vector<Token> input{
+            Token{.type = TokenType::NUMBER, .lexeme = "10", .literal=10.0, .line = 1},
+            Token{.type = TokenType::PLUS, .lexeme = "+", .literal=std::monostate(), .line = 1},
+            Token{.type = TokenType::NUMBER, .lexeme = "15", .literal=15.0, .line = 1},
+            Token{.type = TokenType::END_OF_FILE, .lexeme = "", .line = 1},
+    };
+
+    auto eq = Token{.type = TokenType::PLUS, .lexeme = "+", .literal=std::monostate(), .line = 1};
+    auto expectedAst = Binary(Literal(10.0), eq, Literal(15.0));
+
+    // when
+    Parser parser{input};
+    auto actualAst = parser.expression();
+
+
+    PrettyPrintVisitor p{};
+    auto actualString = p.visitExpr(actualAst);
+    auto expectedString = p.visitExpr(expectedAst);
+
+
+    // then
+    REQUIRE(actualString == expectedString);
+}
+
+TEST_CASE("Parser: minimal equality example") {
     // given
     std::vector<Token> input{
             Token{.type = TokenType::STRING, .lexeme = "lex", .literal="lex", .line = 1},
@@ -31,11 +58,15 @@ TEST_CASE("minimal equality example") {
     auto actualString = p.visitExpr(actualAst);
     auto expectedString = p.visitExpr(expectedAst);
 
+
+    EvaluationVisitor e{};
+    auto result = e.visitExpr(actualAst);
+
     // then
     REQUIRE(actualString == expectedString);
 }
 
-TEST_CASE("minimal example") {
+TEST_CASE("Parser: minimal inequality example") {
     // given
     std::vector<Token> input{
             Token{.type = TokenType::NUMBER, .lexeme = "10", .literal=10.0, .line = 1},
@@ -59,7 +90,7 @@ TEST_CASE("minimal example") {
     REQUIRE(actualString == expectedString);
 }
 
-TEST_CASE("can parse a correct stream of numeric tokens") {
+TEST_CASE("Parser: correct stream of tokens") {
     // given
     std::vector<Token> input{
             Token{.type = TokenType::NUMBER, .lexeme = "1", .literal=10.0, .line = 1},
@@ -90,6 +121,7 @@ TEST_CASE("can parse a correct stream of numeric tokens") {
     PrettyPrintVisitor p{};
     auto actualString = p.visitExpr(actualAst);
     auto expectedString = p.visitExpr(expectedAst);
+
 
     // This works around all the problems std::any introduces for now,
     //   but I imagine evaluating expressions is going to be a nightmare again?

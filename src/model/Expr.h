@@ -21,26 +21,13 @@ public:
 
     template<typename R>
     R accept(IVisitor<R> &visitor) {
-        visitor.visitLiteralExpr(*this);
+        return visitor.visitLiteralExpr(*this);
     }
 
 public:
     literal_t value;
 };
 
-
-class Grouping {
-public:
-    Grouping(expr_t expression) : expression(expression) {}
-
-    template<typename R>
-    R accept(IVisitor<R> &visitor) {
-        visitor.visitGroupingExpr(*this);
-    }
-
-public:
-    expr_t expression{};
-};
 
 class Binary {
 public:
@@ -49,7 +36,7 @@ public:
 
     template<class R>
     R accept(IVisitor<R> &visitor) {
-        visitor.visitBinaryExpr(*this);
+        return visitor.visitBinaryExpr(*this);
     }
 
 public:
@@ -65,7 +52,7 @@ public:
 
     template<typename R>
     R accept(IVisitor<R> &visitor) {
-        visitor.visitUnaryExpr(*this);
+        return visitor.visitUnaryExpr(*this);
     }
 
 public:
@@ -82,8 +69,6 @@ public:
     virtual R visitBinaryExpr(Binary expr) = 0;
 
     virtual R visitUnaryExpr(Unary expr) = 0;
-
-    virtual R visitGroupingExpr(Grouping expr) = 0;
 
     virtual R visitLiteralExpr(Literal expr) = 0;
 };

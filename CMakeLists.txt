@@ -21,7 +21,7 @@ add_executable(cpplox
         src/Parser.h
         src/Runner.cpp
         src/Runner.h
-        )
+        src/visitors/EvaluationVisitor.cpp src/visitors/EvaluationVisitor.h)
 
 add_executable(cpplox_tests
         test/test.cpp
@@ -44,4 +44,4 @@ add_executable(cpplox_tests
         src/Parser.h
         src/Runner.cpp
         src/Runner.h
-        )
+        src/visitors/EvaluationVisitor.cpp src/visitors/EvaluationVisitor.h test/EvaluationTest.cpp)

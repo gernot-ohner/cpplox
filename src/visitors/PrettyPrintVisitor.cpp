@@ -26,13 +26,13 @@ std::string PrettyPrintVisitor::visitUnaryExpr(Unary expr) {
     return ss.str();
 }
 
-std::string PrettyPrintVisitor::visitGroupingExpr(Grouping expr) {
-    std::stringstream ss;
-    ss << "(group ";
-    ss << PrettyPrintVisitor::visitExpr(expr.expression);
-    ss << ")";
-    return ss.str();
-}
+//std::string PrettyPrintVisitor::visitGroupingExpr(Grouping expr) {
+//    std::stringstream ss;
+//    ss << "(group ";
+//    ss << PrettyPrintVisitor::visitExpr(expr.expression);
+//    ss << ")";
+//    return ss.str();
+//}
 
 std::string PrettyPrintVisitor::visitLiteralExpr(Literal expr) {
     std::stringstream ss;

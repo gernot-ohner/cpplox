@@ -9,7 +9,7 @@
 
 class value;
 
-TEST_CASE("can pretty print a subtraction") {
+TEST_CASE("AST: can pretty print a subtraction") {
     // given
     Token minus{.type = TokenType::MINUS, .lexeme = "-", .line = 0 };
     expr_t just123 = Literal(123.0);
@@ -27,7 +27,7 @@ TEST_CASE("can pretty print a subtraction") {
 }
 
 
-TEST_CASE("can pretty print (* (- 123) (group 45.67))") {
+TEST_CASE("AST: can pretty print (* (- 123) (group 45.67))") {
     // given
     Token times {.type = TokenType::STAR, .lexeme = "*", .line = 0};
     Token minus {.type = TokenType::MINUS, .lexeme = "-", .line = 0};
